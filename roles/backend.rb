@@ -6,6 +6,5 @@ default_attributes 'package' => {
   'sum' => '2acdbaee2046885103dee271009ff360001b86d304a47abbc4d52bd0215003e2'
 }
 
-run_list 'recipe[chef-ha::backend]'
-# run_list 'recipe[chef-ha::package]',
-#          'recipe[chef-ha::backend]'
+run_list 'recipe[chef-ha::package]',
+         'recipe[chef-ha::backend]'

@@ -18,8 +18,11 @@ find nodes -type f -name "*.json" | while read json; do
 cat >> ~/.ssh/authorized_keys <<KEY
 ${SSH_KEY} 
 KEY
-# command -v chef-solo || curl https://www.chef.io/chef/install.sh -L | sudo bash
-# git --version
+command -v chef-solo || curl https://www.chef.io/chef/install.sh -L | sudo bash
+rm -rf chef-sandbox
+git clone https://github.com/denis-khalturin-incountry/chef-sandbox
+cd chef-sandbox
+chef-solo --chef-license accept -c solo.rb -j ${json} 
 EOF
     break
 done
