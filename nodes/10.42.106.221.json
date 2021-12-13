@@ -1,0 +1,6 @@
+{
+    "hostname": "chef-backend-03",
+    "run_list": [
+        "role[backend]"
+    ]
+}
