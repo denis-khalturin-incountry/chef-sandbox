@@ -20,7 +20,7 @@ file '/etc/chef-backend/chef-backend.rb' do
 end
 
 bash 'cluster-status' do
-  code 'chef-backend-ctl cluster-status || true'
+  code 'chef-backend-ctl cluster-status || echo'
   ignore_failure :quiet
 
   notifies :run, 'log[message]'
