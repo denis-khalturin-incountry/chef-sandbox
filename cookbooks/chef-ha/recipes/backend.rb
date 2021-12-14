@@ -40,11 +40,19 @@ bash 'cluster-create' do
   only_if { !!data['leader'] }
 end
 
+log 'message' do
+  message "DATA 1: #{data['ip']}", level :info
+end
+
 data_bag('backend').each do |host|
   log 'message' do
     message "HOST: #{host}"
     level :info
   end
+end
+
+log 'message' do
+  message "DATA 2: #{data['ip']}", level :info
 end
 
 # if data['leader'] === true
