@@ -2,8 +2,8 @@ name "frontend"
 description "Part of Chef Infra HA"
 
 default_attributes 'package' => {
-  'deb' => 'https://packages.chef.io/files/stable/chef-backend/2.2.0/ubuntu/18.04/chef-backend_2.2.0-1_amd64.deb',
-  'sum' => '7da51b509c93f8642bb46584a9eba7c38220fafc9a285b224ad22a5bd2e13efa'
+  'deb' => 'https://packages.chef.io/files/stable/chef-server/14.11.15/ubuntu/20.04/chef-server-core_14.11.15-1_amd64.deb',
+  'sum' => '2acdbaee2046885103dee271009ff360001b86d304a47abbc4d52bd0215003e2'
 }
 
 run_list 'recipe[chef-ha::package]',
