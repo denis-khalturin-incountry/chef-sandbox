@@ -29,7 +29,7 @@ bash 'cluster-status' do
   ignore_failure :quiet
   returns 1
 
-  only_if { !!data[:leader] }
+  # only_if { !!data[:leader] }
 end
 
 bash 'cluster-create' do
@@ -58,8 +58,19 @@ data_bag('backend').each do |host|
   end
 end
 
+ruby_block 'wait-chef-backend-secrets' do
+  block do
+    true until ::File.exists?('/tmp/chef-backend-secrets.json')
+  end
+
+  only_if { !data[:leader] }
+end
+
 bash 'cluster-create' do
   code "chef-backend-ctl join-cluster #{leader[:ip]} -s /tmp/chef-backend-secrets.json --accept-license --yes"
+
+  action :nothing
+  subscribes :run, [ 'bash[cluster-status]' ]
 
   only_if { !data[:leader] }
 end
