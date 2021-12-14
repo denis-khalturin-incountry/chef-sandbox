@@ -27,21 +27,30 @@ bash 'cluster-status' do
   only_if { data['leader'] != true }
 end
 
+bash 'cluster-create' do
+  code 'chef-backend-ctl create-cluster --accept-license'
+
+  action :nothing
+  subscribes :write, [ 'bash[cluster-status]' ]
+
+  only_if { data['leader'] != true }
+end
+
 log 'message' do
   message "TEST"
   level :info
   action :nothing
-  subscribes :write, [ 'bash[cluster-status]' ]
+  subscribes :write, [ 'bash[cluster-create]' ]
 end
 
-data_bag('backend').each do |host|
-  log 'message' do
-    message "HOST: #{host}"
-    level :info
-    action :nothing
-    subscribes :write, [ 'bash[cluster-status]' ]
-  end
-end
+# data_bag('backend').each do |host|
+#   log 'message' do
+#     message "HOST: #{host}"
+#     level :info
+#     action :nothing
+#     subscribes :write, [ 'bash[cluster-status]' ]
+#   end
+# end
 
 # if data['leader'] === true
 # end
