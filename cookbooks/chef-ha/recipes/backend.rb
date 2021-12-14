@@ -42,6 +42,7 @@ end
 log 'message' do
   message  "TEST"
   level    :info
+  action :nothing
   subscribes :create, [ 'bash[cluster-status]' ]
 end
 
