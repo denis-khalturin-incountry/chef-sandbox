@@ -14,3 +14,7 @@ log 'message' do
   message  "databag:\n#{data['leader'] === true}; #{data['ip']}"
   level    :info
 end
+
+file '/etc/chef-backend/chef-backend.rb' do
+  content "publish_address '#{node['ipaddress']}'"
+end
