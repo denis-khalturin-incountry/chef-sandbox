@@ -41,7 +41,8 @@ bash 'cluster-create' do
 end
 
 log 'message' do
-  message "DATA 1: #{data['ip']}", level :info
+  message "DATA 1: #{data['ip']}"
+  level :info
 end
 
 data_bag('backend').each do |host|
@@ -52,7 +53,8 @@ data_bag('backend').each do |host|
 end
 
 log 'message' do
-  message "DATA 2: #{data['ip']}", level :info
+  message "DATA 2: #{data['ip']}"
+  level :info
 end
 
 # if data['leader'] === true
