@@ -44,7 +44,7 @@ end
 data_bag('frontend').each do |host|
   front = data_bag_item('frontend', host)
 
-  if !!data[:leader] && !!front[:leader]
+  if !!data[:leader]
     bash 'chef-frontend-config' do
       code <<-EOF
         chef-backend-ctl gen-server-config #{host} -f /tmp/chef-#{host}.rb
