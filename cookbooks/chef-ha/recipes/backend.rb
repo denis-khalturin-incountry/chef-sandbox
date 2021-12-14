@@ -28,8 +28,6 @@ bash 'cluster-status' do
   code 'chef-backend-ctl cluster-status'
   ignore_failure :quiet
   returns 1
-
-  # only_if { !!data[:leader] }
 end
 
 bash 'cluster-create' do
