@@ -11,7 +11,7 @@ end
 data = data_bag_item('backend', 'chef-backend-01')
 
 log 'message' do
-  message  "databag:\n#{data['leader'] === true}; #{data['ip']}"
+  message  "databag:\n#{data['leader']}; #{data['leader'] === true}; #{data['ip']}"
   level    :info
 end
 
