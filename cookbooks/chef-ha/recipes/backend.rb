@@ -25,14 +25,14 @@ end
 
 bash 'cluster-status' do
   code 'chef-backend-ctl cluster-status'
-  returns 1
   ignore_failure :quiet
+  returns 1
 
   only_if { !!data['leader'] }
 end
 
 bash 'cluster-create' do
-  code 'chef-backend-ctl create-cluster --accept-license'
+  code 'chef-backend-ctl create-cluster --accept-license --yes'
 
   action :nothing
   subscribes :run, [ 'bash[cluster-status]' ]
