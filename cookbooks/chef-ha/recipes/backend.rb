@@ -26,7 +26,8 @@ log 'message' do
 end
 
 bash 'cluster-status' do
-  code 'chef-backend-ctl cluster-status || echo'
+  code 'w'
+  # code 'chef-backend-ctl cluster-status'
   ignore_failure :quiet
 
   notifies :run, 'log[message]', :immediate
