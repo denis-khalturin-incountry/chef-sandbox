@@ -19,20 +19,26 @@ file '/etc/chef-backend/chef-backend.rb' do
   content "publish_address '#{node['ipaddress']}'"
 end
 
-if data['leader'] === true
-  log 'message' do
-    message  shell_out("chef-backend-ctl cluster-status")
-    level    :info
-  end
-  # bash 'create-cluster' do
-  #   code 'chef-backend-ctl create-cluster --accept-license'
-  #   # only_if { data['leader'] === true }
-  # end
+execute 'apache_configtest' do
+  command 'chef-backend-ctl cluster-status'
 
-  # data_bag('backend').each do |host|
-  #   log 'message' do
-  #     message  "HOST: #{host}"
-  #     level    :info
-  #   end
-  # end
+  only_if { data['leader'] === true }
 end
+
+# if data['leader'] === true
+#   log 'message' do
+#     message  shell_out("")
+#     level    :info
+#   end
+#   # bash 'create-cluster' do
+#   #   code 'chef-backend-ctl create-cluster --accept-license'
+#   #   # only_if { data['leader'] === true }
+#   # end
+
+#   # data_bag('backend').each do |host|
+#   #   log 'message' do
+#   #     message  "HOST: #{host}"
+#   #     level    :info
+#   #   end
+#   # end
+# end
