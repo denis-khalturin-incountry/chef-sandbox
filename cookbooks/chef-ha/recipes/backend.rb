@@ -44,7 +44,7 @@ data_bag('backend').each do |host|
 
   if !!data[:leader]
     bash 'chef-backend-secrets' do
-      code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{back[:ip]}:/tmp/chef-backend-secrets.json"
+      code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{back[:ip]}:/tmp/"
 
       only_if { !back[:leader] } 
     end
@@ -52,6 +52,19 @@ data_bag('backend').each do |host|
     if !!back[:leader]
       leader = back
       break
+    end
+  end
+end
+
+data_bag('frontend').each do |host|
+  front = data_bag_item('frontend', host)
+
+  if !!data[:leader]
+    bash 'chef-backend-secrets' do
+      code <<-EOF
+        chef-backend-ctl gen-server-config #{host} -f /tmp/chef-#{host}.rb
+        scp -o StrictHostKeychecking=no /tmp/chef-#{host}.rb #{front[:ip]}:/tmp/"
+      EOF
     end
   end
 end
