@@ -40,19 +40,10 @@ bash 'cluster-create' do
   only_if { !!data['leader'] }
 end
 
-log 'message' do
-  message "TEST"
-  level :info
-  action :nothing
-  subscribes :write, [ 'bash[cluster-create]' ]
-end
-
 data_bag('backend').each do |host|
   log 'message' do
     message "HOST: #{host}"
     level :info
-    action :nothing
-    subscribes :write, [ 'bash[cluster-create]' ]
   end
 end
 
