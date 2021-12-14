@@ -20,7 +20,7 @@ file '/etc/chef-backend/chef-backend.rb' do
 end
 
 file '/tmp/foo.txt' do
-  content 'foos'
+  content 'fooss'
   action :nothing
   subscribes :create, [ 'file[/tmp/bar.txt]', 'file[/tmp/baz.txt]' ]
 end
@@ -28,7 +28,7 @@ file '/tmp/bar.txt' do
   content 'barse'
 end
 file '/tmp/baz.txt' do
-  content 'baz'
+  content 'baze'
 end
 
 # bash 'cluster-status' do
@@ -43,7 +43,7 @@ log 'message' do
   message  "TEST"
   level    :info
   action :nothing
-  subscribes :create, [ 'file[/tmp/foo.txt]' ]
+  subscribes :write, [ 'file[/tmp/foo.txt]' ]
   # subscribes :create, [ 'bash[cluster-status]' ]
 end
 
