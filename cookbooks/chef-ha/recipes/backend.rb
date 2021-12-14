@@ -46,6 +46,10 @@ log 'message' do
   subscribes :write, [ 'bash[cluster-status]' ]
 end
 
+log 'message' do
+  message  "TEST 2"
+  level    :info
+end
 
 # if data['leader'] === true
 #   log 'message' do
