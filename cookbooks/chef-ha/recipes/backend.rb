@@ -44,7 +44,7 @@ data_bag('backend').each do |host|
   back = data_bag_item('backend', host)
 
   bash 'chef-backend-secrets' do
-    code "scp /etc/chef-backend/chef-backend-secrets.json #{back['ip']}:/tmp/chef-backend-secrets.json"
+    code "echo scp /etc/chef-backend/chef-backend-secrets.json #{back['ip']}:/tmp/chef-backend-secrets.json"
 
     only_if { !back['leader'] } 
   end
