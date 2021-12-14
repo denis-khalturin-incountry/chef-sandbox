@@ -19,15 +19,14 @@ file '/etc/chef-backend/chef-backend.rb' do
   content "publish_address '#{node['ipaddress']}'"
 end
 
-puts shell_out("chef-backend-ctl cluster-status 2>&1 | grep 'No etcd configuration data found'")
+bash 'cluster-status' do
+  code 'chef-backend-ctl cluster-status'
+  flags 'ex'
+  ignore_failure :quiet
+  action :nothing
 
-# execute 'cluster-status' do
-#   command 'chef-backend-ctl cluster-status 2>&1 | grep "No etcd configuration data found"'
-#   ignore_failure :quiet
-#   action :nothing
-
-#   # only_if { data['leader'] != true }
-# end
+  # only_if { data['leader'] != true }
+end
 
 log 'message' do
   message  "TEST"
