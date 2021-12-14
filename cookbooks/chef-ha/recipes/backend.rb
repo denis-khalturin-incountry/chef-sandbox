@@ -34,6 +34,7 @@ end
 bash 'cluster-status' do
   # code 'w'
   code 'chef-backend-ctl cluster-status'
+  returns 1
   ignore_failure :quiet
 
   # only_if { data['leader'] != true }
