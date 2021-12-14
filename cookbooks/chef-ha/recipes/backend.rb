@@ -24,7 +24,7 @@ bash 'cluster-status' do
   returns 1
   ignore_failure :quiet
 
-  only_if { !!data['leader'] }
+  only_if { data['leader'].boolean? }
 end
 
 bash 'cluster-create' do
@@ -33,7 +33,7 @@ bash 'cluster-create' do
   action :nothing
   subscribes :run, [ 'bash[cluster-status]' ]
 
-  only_if { !!data['leader'] }
+  only_if { data['leader'].boolean? }
 end
 
 log 'message' do
