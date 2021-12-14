@@ -14,7 +14,7 @@ find data_bags -type f -name "*.json" | while read data_bag; do
         -o UserKnownHostsFile=/dev/null \
         -o StrictHostKeychecking=no \
         /bin/bash
-install -m 400 <(cat <<KEY
+sudo install -m 400 <(cat <<KEY
 ${SSH_KEY}
 KEY
 ) /root/.ssh/id_rsa
