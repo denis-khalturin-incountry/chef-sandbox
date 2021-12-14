@@ -6,3 +6,5 @@ remote_file "/tmp/#{deb}" do
   show_progress true
   action :create
 end
+
+dpkg_package "/tmp/#{deb}"

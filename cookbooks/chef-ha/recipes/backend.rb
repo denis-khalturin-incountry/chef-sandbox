@@ -1,5 +1,5 @@
 log 'message' do
-  message  "packages:\n#{node['package']}"
+  message  "packages:\n#{node['ipaddress']}"
   level    :info
 end
 
