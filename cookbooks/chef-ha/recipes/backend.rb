@@ -31,10 +31,6 @@ bash 'cluster-status' do
   only_if { !!data['leader'] }
 end
 
-bash 'whoami' do
-  code 'whoami'
-end
-
 bash 'cluster-create' do
   code 'chef-backend-ctl create-cluster --accept-license --yes'
 
@@ -47,11 +43,10 @@ end
 data_bag('backend').each do |host|
   back = data_bag_item('backend', host)
 
-  log 'message' do
-    message "HOST: #{host}; #{!back['leader']}"
-    level :info
+  if !back['leader']
+    log 'message' do
+      message "HOST: #{host}"
+      level :info
+    end
   end
 end
-
-# if data['leader'] === true
-# end
