@@ -21,7 +21,6 @@ end
 
 bash 'cluster-status' do
   code 'chef-backend-ctl cluster-status'
-  flags 'ex'
   ignore_failure :quiet
 
   # only_if { data['leader'] != true }
