@@ -19,16 +19,16 @@ file '/etc/chef-backend/chef-backend.rb' do
   content "publish_address '#{node['ipaddress']}'"
 end
 
-bash 'create-cluster' do
-  code 'chef-backend-ctl create-cluster --accept-license'
-  only_if { data['leader'] === true }
-end
-
-data_bag('backend').each do |host|
-  log 'message' do
-    message  "HOST: #{host}"
-    level    :info
+if data['leader'] === true
+  bash 'create-cluster' do
+    code 'chef-backend-ctl create-cluster --accept-license'
+    # only_if { data['leader'] === true }
   end
 
-  only_if { data['leader'] === true }
+  data_bag('backend').each do |host|
+    log 'message' do
+      message  "HOST: #{host}"
+      level    :info
+    end
+  end
 end
