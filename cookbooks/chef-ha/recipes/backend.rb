@@ -42,7 +42,7 @@ end
 log 'message' do
   message  "TEST"
   level    :info
-  subscribes :create, [ 'file[/tmp/foo.txt]' ]
+  subscribes :create, [ 'bash[cluster-status]' ]
 end
 
 
