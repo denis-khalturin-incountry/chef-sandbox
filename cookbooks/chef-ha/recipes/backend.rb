@@ -1,21 +1,3 @@
-log 'message' do
-  message  "packages:\n#{node[:hostname]}"
-  level    :info
-end
-
-log 'message' do
-  message  "databag:\nBACKEND:#{data_bag('backend')}\nFRONTEND:#{data_bag('frontend')}"
-  level    :info
-end
-
-data = data_bag_item('backend', node[:hostname])
-leader = {}
-
-log 'message' do
-  message  "databag:\n#{data[:leader]}; #{data[:leader] === true}; #{data[:ip]}"
-  level    :info
-end
-
 directory '/etc/chef-backend' do
   action :create
 end
@@ -59,7 +41,7 @@ end
 data_bag('frontend').each do |host|
   front = data_bag_item('frontend', host)
 
-  if !!data[:leader]
+  if !!data[:leader] && !!front[:leader]
     bash 'chef-frontend-config' do
       code <<-EOF
         chef-backend-ctl gen-server-config #{host} -f /tmp/chef-#{host}.rb
@@ -77,7 +59,7 @@ ruby_block 'wait-chef-backend-secrets' do
   only_if { !data[:leader] }
 end
 
-bash 'cluster-create' do
+bash 'join-cluster' do
   code "chef-backend-ctl join-cluster #{leader[:ip]} -s /tmp/chef-backend-secrets.json --accept-license --yes"
 
   action :nothing
