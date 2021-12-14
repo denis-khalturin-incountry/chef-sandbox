@@ -9,6 +9,7 @@ log 'message' do
 end
 
 data = data_bag_item('backend', node['hostname'])
+leader = {}
 
 log 'message' do
   message  "databag:\n#{data['leader']}; #{data['leader'] === true}; #{data['ip']}"
@@ -50,19 +51,15 @@ data_bag('backend').each do |host|
       only_if { !back['leader'] } 
     end
   else
-    log 'message' do
-      message  "DATA 1: #{back['ip']}: #{back['leader']}"
-      level    :info
-    end
-
     if !!back['leader']
+      leader = back
       break
     end
   end
 end
 
 log 'message' do
-  message  "DATA 1: #{back['ip']}: #{back['leader']}"
+  message  "DATA 1: #{leader['ip']}: #{leader['leader']}"
   level    :info
 end
 
