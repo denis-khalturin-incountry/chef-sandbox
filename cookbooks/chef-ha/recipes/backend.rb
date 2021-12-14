@@ -19,7 +19,7 @@ file '/etc/chef-backend/chef-backend.rb' do
   content "publish_address '#{node['ipaddress']}'"
 end
 
-execute 'apache_configtest' do
+execute 'cluster-status' do
   command 'chef-backend-ctl cluster-status'
 
   only_if { data['leader'] === true }
