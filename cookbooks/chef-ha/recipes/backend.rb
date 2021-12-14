@@ -1,5 +1,5 @@
 log 'message' do
-  message  "packages:\n#{node['hostname']}"
+  message  "packages:\n#{node[:hostname]}"
   level    :info
 end
 
@@ -8,11 +8,11 @@ log 'message' do
   level    :info
 end
 
-data = data_bag_item('backend', node['hostname'])
+data = data_bag_item('backend', node[:hostname])
 leader = {}
 
 log 'message' do
-  message  "databag:\n#{data['leader']}; #{data['leader'] === true}; #{data['ip']}"
+  message  "databag:\n#{data[:leader]}; #{data[:leader] === true}; #{data[:ip]}"
   level    :info
 end
 
@@ -21,7 +21,7 @@ directory '/etc/chef-backend' do
 end
 
 file '/etc/chef-backend/chef-backend.rb' do
-  content "publish_address '#{node['ipaddress']}'"
+  content "publish_address '#{node[:ipaddress]}'"
 end
 
 bash 'cluster-status' do
@@ -29,7 +29,7 @@ bash 'cluster-status' do
   ignore_failure :quiet
   returns 1
 
-  only_if { !!data['leader'] }
+  only_if { !!data[:leader] }
 end
 
 bash 'cluster-create' do
@@ -38,20 +38,20 @@ bash 'cluster-create' do
   action :nothing
   subscribes :run, [ 'bash[cluster-status]' ]
 
-  only_if { !!data['leader'] }
+  only_if { !!data[:leader] }
 end
 
 data_bag('backend').each do |host|
   back = data_bag_item('backend', host)
 
-  if !!data['leader']
+  if !!data[:leader]
     bash 'chef-backend-secrets' do
-      code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{back['ip']}:/tmp/chef-backend-secrets.json"
+      code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{back[:ip]}:/tmp/chef-backend-secrets.json"
 
-      only_if { !back['leader'] } 
+      only_if { !back[:leader] } 
     end
   else
-    if !!back['leader']
+    if !!back[:leader]
       leader = back
       break
     end
@@ -59,7 +59,7 @@ data_bag('backend').each do |host|
 end
 
 bash 'cluster-create' do
-  code "chef-backend-ctl join-cluster #{leader['ip']} -s /tmp/chef-backend-secrets.json --accept-license --yes"
+  code "chef-backend-ctl join-cluster #{leader[:ip]} -s /tmp/chef-backend-secrets.json --accept-license --yes"
 
-  only_if { !data['leader'] }
+  only_if { !data[:leader] }
 end
