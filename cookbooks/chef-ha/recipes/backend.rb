@@ -58,13 +58,8 @@ data_bag('backend').each do |host|
   end
 end
 
-log 'message' do
-  message  "DATA 1: #{leader['ip']}: #{leader['leader']}"
-  level    :info
+bash 'cluster-create' do
+  code "chef-backend-ctl join-cluster #{leader['ip']} -s /tmp/chef-backend-secrets.json"
+
+  only_if { !data['leader'] }
 end
-
-# bash 'cluster-create' do
-#   code 'chef-backend-ctl join-cluster <IP_BE1> -s /tmp/chef-backend-secrets.json'
-
-#   only_if { !data['leader'] }
-# end
