@@ -22,7 +22,7 @@ end
 log 'message' do
   message  "TEST"
   level    :info
-  # action :nothing
+  action :nothing
 end
 
 bash 'cluster-status' do
