@@ -29,7 +29,7 @@ end
 log 'message' do
   message  "TEST"
   level    :info
-  notifies 'execute[cluster-status]'
+  notifies :run, 'execute[cluster-status]'
 end
 
 # if data['leader'] === true
