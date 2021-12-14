@@ -20,6 +20,6 @@ file '/etc/chef-backend/chef-backend.rb' do
 end
 
 bash 'create-cluster' do
-  code 'chef-backend-ctl create-cluster'
+  code 'chef-backend-ctl create-cluster --accept-license'
   # not_if { ::File.exist?(extract_path) }
 end
