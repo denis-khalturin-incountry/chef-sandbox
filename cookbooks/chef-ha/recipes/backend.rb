@@ -21,6 +21,7 @@ end
 
 execute 'cluster-status' do
   command 'chef-backend-ctl cluster-status'
+  returns [0, 1]
 
   only_if { data['leader'] === true }
 end
