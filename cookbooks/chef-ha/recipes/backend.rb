@@ -47,14 +47,14 @@ log 'message' do
   subscribes :write, [ 'bash[cluster-create]' ]
 end
 
-# data_bag('backend').each do |host|
-#   log 'message' do
-#     message "HOST: #{host}"
-#     level :info
-#     action :nothing
-#     subscribes :write, [ 'bash[cluster-status]' ]
-#   end
-# end
+data_bag('backend').each do |host|
+  log 'message' do
+    message "HOST: #{host}"
+    level :info
+    action :nothing
+    subscribes :write, [ 'bash[cluster-create]' ]
+  end
+end
 
 # if data['leader'] === true
 # end
