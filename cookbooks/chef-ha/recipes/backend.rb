@@ -40,7 +40,7 @@ bash 'cluster-create' do
   only_if { !!data['leader'] }
 end
 
-if back['leader']
+if data['leader']
   data_bag('backend').each do |host|
     back = data_bag_item('backend', host)
 
