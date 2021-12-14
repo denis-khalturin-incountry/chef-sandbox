@@ -15,16 +15,5 @@ find data_bags -type f -name "*backend*1.json" | while read data_bag; do
         -o StrictHostKeychecking=no \
         sudo /bin/bash
 whoami
-# cat <<KEY | sudo tee /root/.ssh/id_rsa > /dev/null
-# ${SSH_KEY}
-# KEY
-# cat <<KEY | sudo tee -a /root/.ssh/authorized_keys > /dev/null
-# ${SSH_KEY_PUB}
-# KEY
-# # command -v chef-solo > /dev/null || curl https://www.chef.io/chef/install.sh -L | sudo bash
-# # sudo rm -rf chef-sandbox
-# # git clone https://github.com/denis-khalturin-incountry/chef-sandbox
-# # cd chef-sandbox
-# # sudo chef-solo --chef-license accept -c solo.rb -j ${json_attribs}
 EOF
 done
