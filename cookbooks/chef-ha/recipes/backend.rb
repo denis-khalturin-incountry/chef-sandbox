@@ -45,7 +45,7 @@ data_bag('backend').each do |host|
 
   if !back['leader']
     log 'message' do
-      message "HOST: #{host}; #{!back['ip']}"
+      message "HOST: #{host}; #{back['ip']}"
       level :info
     end
   end
