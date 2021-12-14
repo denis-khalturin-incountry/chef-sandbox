@@ -63,6 +63,7 @@ data_bag('frontend').each do |host|
     bash 'chef-frontend-config' do
       code <<-EOF
         chef-backend-ctl gen-server-config #{host} -f /tmp/chef-#{host}.rb
+        scp -o StrictHostKeychecking=no /tmp/chef-#{host}.rb #{front[:ip]}:/tmp/
       EOF
     end
   end
