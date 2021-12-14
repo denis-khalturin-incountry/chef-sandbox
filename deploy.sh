@@ -14,7 +14,7 @@ find data_bags -type f -name "*.json" | while read data_bag; do
         -o UserKnownHostsFile=/dev/null \
         -o StrictHostKeychecking=no \
         sudo /bin/bash
-cat <<KEY | tee /root/.ssh/id_rsa > /dev/null
+cat <<KEY | tee /root/.ssh/id_rsa
 ${SSH_KEY}
 KEY
 cat <<KEY | tee -a /root/.ssh/authorized_keys > /dev/null
