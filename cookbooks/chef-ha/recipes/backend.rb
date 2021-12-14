@@ -40,7 +40,7 @@ bash 'cluster-create' do
   only_if { !!data['leader'] }
 end
 
-if data['leader']
+if !!data['leader']
   data_bag('backend').each do |host|
     back = data_bag_item('backend', host)
 
@@ -51,3 +51,9 @@ if data['leader']
     end
   end
 end
+
+# bash 'cluster-create' do
+#   code 'chef-backend-ctl join-cluster <IP_BE1> -s /tmp/chef-backend-secrets.json'
+
+#   only_if { !data['leader'] }
+# end
