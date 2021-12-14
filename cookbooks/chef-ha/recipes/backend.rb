@@ -22,7 +22,7 @@ end
 log 'message' do
   message  "TEST"
   level    :info
-  action :nothing
+  # action :nothing
 end
 
 bash 'cluster-status' do
@@ -30,7 +30,7 @@ bash 'cluster-status' do
   # code 'chef-backend-ctl cluster-status'
   ignore_failure :quiet
 
-  notifies :run, 'log[message]', :immediate
+  # notifies :run, 'log[message]', :immediate
   # only_if { data['leader'] != true }
 end
 
