@@ -1,11 +1,11 @@
 #!/bin/bash
 
-echo -e "y\n" | ssh-keygen -f /tmp/.chef-sshkey -q -N "" > /dev/null
+# echo -e "y\n" | ssh-keygen -f /tmp/.chef-sshkey -q -N "" > /dev/null
 
 SSH_KEY=$(cat /tmp/.chef-sshkey)
 SSH_KEY_PUB=$(cat /tmp/.chef-sshkey.pub)
 
-find data_bags -type f -name "*backend*01.json" | while read data_bag; do
+find data_bags -type f -name "*.json" | while read data_bag; do
     json_attribs="nodes/$(basename ${data_bag})"
     ip=$(jq -r '.ip' ${data_bag})
 
