@@ -23,13 +23,13 @@ execute 'cluster-status' do
   command 'chef-backend-ctl cluster-status &>/dev/null && echo 1 || echo 2'
   # returns [0, 1]
 
-  only_if { data['leader'] === false }
+  only_if { data['leader'] == false }
 end
 
 log 'message' do
   message  "TEST"
   level    :info
-  notifies :run, 'execute[cluster-status]'
+  notifies 'execute[cluster-status]'
 end
 
 # if data['leader'] === true
