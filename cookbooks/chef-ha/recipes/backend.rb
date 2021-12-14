@@ -22,8 +22,9 @@ end
 execute 'cluster-status' do
   command 'chef-backend-ctl cluster-status'
   ignore_failure :quiet
+  action :nothing
 
-  only_if { data['leader'] != true }
+  # only_if { data['leader'] != true }
 end
 
 log 'message' do
