@@ -20,15 +20,15 @@ file '/etc/chef-backend/chef-backend.rb' do
 end
 
 file '/tmp/foo.txt' do
-  content 'hi'
+  content 'foo'
   action :nothing
   subscribes :create, [ 'file[/tmp/bar.txt]', 'file[/tmp/baz.txt]' ]
 end
 file '/tmp/bar.txt' do
-  content 'hi'
+  content 'bar'
 end
 file '/tmp/baz.txt' do
-  content 'hi'
+  content 'baz'
 end
 
 # bash 'cluster-status' do
