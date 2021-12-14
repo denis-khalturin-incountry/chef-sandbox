@@ -18,3 +18,8 @@ end
 file '/etc/chef-backend/chef-backend.rb' do
   content "publish_address '#{node['ipaddress']}'"
 end
+
+bash 'create-cluster' do
+  code 'chef-backend-ctl create-cluster'
+  # not_if { ::File.exist?(extract_path) }
+end
