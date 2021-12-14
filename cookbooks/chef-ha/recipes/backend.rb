@@ -59,7 +59,7 @@ data_bag('backend').each do |host|
 end
 
 bash 'cluster-create' do
-  code "chef-backend-ctl join-cluster #{leader['ip']} -s /tmp/chef-backend-secrets.json"
+  code "chef-backend-ctl join-cluster #{leader['ip']} -s /tmp/chef-backend-secrets.json --accept-license --yes"
 
   only_if { !data['leader'] }
 end
