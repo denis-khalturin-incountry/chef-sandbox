@@ -21,7 +21,7 @@ cat >> ~/.ssh/authorized_keys <<KEY
 ${SSH_KEY_PUB} 
 KEY
 command -v chef-solo > /dev/null || curl https://www.chef.io/chef/install.sh -L | sudo bash
-rm -rf chef-sandbox
+sudo rm -rf chef-sandbox
 git clone https://github.com/denis-khalturin-incountry/chef-sandbox
 cd chef-sandbox
 sudo chef-solo --chef-license accept -c solo.rb -j ${json_attribs}
