@@ -20,8 +20,8 @@ file '/etc/chef-backend/chef-backend.rb' do
 end
 
 execute 'cluster-status' do
-  command 'chef-backend-ctl cluster-status'
-  returns [0, 1]
+  command 'chef-backend-ctl cluster-status && echo 1 || echo 2'
+  # returns [0, 1]
 
   only_if { data['leader'] === true }
 end
