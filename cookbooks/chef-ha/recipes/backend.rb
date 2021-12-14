@@ -15,6 +15,10 @@ log 'message' do
   level    :info
 end
 
+directory '/etc/chef-backend' do
+  action :create
+end
+
 file '/etc/chef-backend/chef-backend.rb' do
   content "publish_address '#{node['ipaddress']}'"
 end
