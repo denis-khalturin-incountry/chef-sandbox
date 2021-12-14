@@ -31,6 +31,10 @@ bash 'cluster-status' do
   only_if { !!data['leader'] }
 end
 
+bash 'whoami' do
+  code 'whoami'
+end
+
 bash 'cluster-create' do
   code 'chef-backend-ctl create-cluster --accept-license --yes'
 
