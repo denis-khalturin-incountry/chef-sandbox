@@ -11,6 +11,6 @@ end
 data = data_bag_item('backend', 'chef-backend-01')
 
 log 'message' do
-  message  "databag:\n${data}"
+  message  "databag:\n#{data}"
   level    :info
 end
