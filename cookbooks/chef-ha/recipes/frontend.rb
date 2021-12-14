@@ -1,5 +1,5 @@
 leader = {}
-data = data_bag_item('backend', node[:hostname])
+data = data_bag_item('frontend', node[:hostname])
 
 ruby_block 'wait-chef-frontend-config' do
   block do
