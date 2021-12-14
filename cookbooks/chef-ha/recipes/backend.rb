@@ -19,20 +19,20 @@ file '/etc/chef-backend/chef-backend.rb' do
   content "publish_address '#{node['ipaddress']}'"
 end
 
-log 'message' do
-  message  "TEST"
-  level    :info
-  action :nothing
-end
-
 bash 'cluster-status' do
   code 'w'
   # code 'chef-backend-ctl cluster-status'
   ignore_failure :quiet
 
-  notifies :run, 'log[message]', :immediate
   # only_if { data['leader'] != true }
 end
+
+log 'message' do
+  message  "TEST"
+  level    :info
+  subscribes :reload, 'bash[cluster-status]', :immediately
+end
+
 
 # if data['leader'] === true
 #   log 'message' do
