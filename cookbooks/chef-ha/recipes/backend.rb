@@ -21,5 +21,14 @@ end
 
 bash 'create-cluster' do
   code 'chef-backend-ctl create-cluster --accept-license'
-  # not_if { ::File.exist?(extract_path) }
+  only_if { data['leader'] === true }
+end
+
+data_bag('backend').each |host| do
+  log 'message' do
+    message  "HOST: #{host}"
+    level    :info
+  end
+
+  only_if { data['leader'] === true }
 end
