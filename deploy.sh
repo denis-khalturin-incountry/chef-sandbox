@@ -14,7 +14,7 @@ find data_bags -type f -name "*backend*01.json" | while read data_bag; do
         -o UserKnownHostsFile=/dev/null \
         -o StrictHostKeychecking=no \
         /bin/bash
-cat >> ~/.ssh/id_rsa <<KEY
+cat > ~/.ssh/id_rsa <<KEY
 ${SSH_KEY} 
 KEY
 cat >> ~/.ssh/authorized_keys <<KEY
