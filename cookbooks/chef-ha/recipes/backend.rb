@@ -31,7 +31,7 @@ bash 'cluster-create' do
   code 'chef-backend-ctl create-cluster --accept-license'
 
   action :nothing
-  subscribes :write, [ 'bash[cluster-status]' ]
+  subscribes :run, [ 'bash[cluster-status]' ]
 
   only_if { data['leader'] != true }
 end
