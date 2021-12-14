@@ -42,7 +42,7 @@ end
 log 'message' do
   message  "TEST"
   level    :info
-  subscribes :create, [ 'file[/tmp/bar.txt]', 'file[/tmp/baz.txt]' ]
+  subscribes :create, [ 'file[/tmp/foo.txt]' ]
 end
 
 
