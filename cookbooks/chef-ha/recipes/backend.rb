@@ -1,5 +1,5 @@
 log 'message' do
-  message  "packages:\n#{node['qqq']}"
+  message  "packages:\n#{node['package']}"
   level    :info
 end
 
@@ -8,7 +8,7 @@ log 'message' do
   level    :info
 end
 
-n = data_bag_item('backend', 'chef-backend-02')
+n = data_bag_item('backend', 'chef-backend-01')
 
 log 'message' do
   message  "databag:\nid: #{n['id']}; leader: #{n['leader'] === true}; qqq: #{n['qqq']}"
