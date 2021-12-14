@@ -39,11 +39,11 @@ end
 #   # only_if { data['leader'] != true }
 # end
 
-# log 'message' do
-#   message  "TEST"
-#   level    :info
-#   subscribes :reload, 'bash[cluster-status]', :immediately
-# end
+log 'message' do
+  message  "TEST"
+  level    :info
+  subscribes :create, [ 'file[/tmp/bar.txt]', 'file[/tmp/baz.txt]' ]
+end
 
 
 # if data['leader'] === true
