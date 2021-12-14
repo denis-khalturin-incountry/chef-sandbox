@@ -40,12 +40,14 @@ bash 'cluster-create' do
   only_if { !!data['leader'] }
 end
 
-data_bag('backend').each do |host|
-  back = data_bag_item('backend', host)
+if back['leader']
+  data_bag('backend').each do |host|
+    back = data_bag_item('backend', host)
 
-  bash 'chef-backend-secrets' do
-    code "echo scp /etc/chef-backend/chef-backend-secrets.json #{back['ip']}:/tmp/chef-backend-secrets.json"
+    bash 'chef-backend-secrets' do
+      code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{back['ip']}:/tmp/chef-backend-secrets.json"
 
-    only_if { !back['leader'] } 
+      only_if { !back['leader'] } 
+    end
   end
 end
