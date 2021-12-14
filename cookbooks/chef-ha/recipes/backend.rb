@@ -8,9 +8,9 @@ log 'message' do
   level    :info
 end
 
-n = data_bag_item('backend', 'chef-backend-01')
+data = data_bag_item('backend', 'chef-backend-01')
 
 log 'message' do
-  message  "databag:\nid: #{n['id']}; leader: #{n['leader'] === true}; qqq: #{n['qqq']}"
+  message  "databag:\n${data}"
   level    :info
 end
