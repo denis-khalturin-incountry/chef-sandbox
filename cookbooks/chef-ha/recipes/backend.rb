@@ -11,6 +11,6 @@ end
 n = data_bag_item('nodes', 'chef-backend-01')
 
 log 'message' do
-  message  "databag:\nid: #{n['id']}; leader: #{n['leaders']}; qqq: #{n['qqq']}"
+  message  "databag:\nid: #{n['id']}; leader: #{n['leader']}; qqq: #{n['qqq']}"
   level    :info
 end
