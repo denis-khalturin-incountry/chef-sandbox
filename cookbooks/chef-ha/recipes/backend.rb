@@ -60,7 +60,7 @@ data_bag('frontend').each do |host|
   front = data_bag_item('frontend', host)
 
   if !!data[:leader]
-    bash 'chef-backend-secrets' do
+    bash 'chef-frontend-config' do
       code <<-EOF
         chef-backend-ctl gen-server-config #{host} -f /tmp/chef-#{host}.rb
         scp -o StrictHostKeychecking=no /tmp/chef-#{host}.rb #{front[:ip]}:/tmp/"
