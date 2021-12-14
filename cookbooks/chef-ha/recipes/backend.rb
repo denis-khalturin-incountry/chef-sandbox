@@ -23,13 +23,13 @@ bash 'cluster-status' do
   code 'chef-backend-ctl cluster-status'
   ignore_failure :quiet
 
+  notifies :run, 'log[message]'
   # only_if { data['leader'] != true }
 end
 
 log 'message' do
   message  "TEST"
   level    :info
-  # notifies :run, 'bash[cluster-status]'
 end
 
 # if data['leader'] === true
