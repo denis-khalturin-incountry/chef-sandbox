@@ -22,10 +22,10 @@ cat <<KEY | tee -a /root/.ssh/authorized_keys > /dev/null
 ${SSH_KEY_PUB}
 KEY
 chmod 400 /root/.ssh/id_rsa
-# command -v chef-solo > /dev/null || curl https://www.chef.io/chef/install.sh -L | sudo bash
-# rm -rf chef-sandbox
-# git clone https://github.com/denis-khalturin-incountry/chef-sandbox
-# cd chef-sandbox
-# chef-solo --chef-license accept -c solo.rb -j ${json_attribs}
+command -v chef-solo > /dev/null || curl https://www.chef.io/chef/install.sh -L | sudo bash
+rm -rf chef-sandbox
+git clone https://github.com/denis-khalturin-incountry/chef-sandbox
+cd chef-sandbox
+chef-solo --chef-license accept -c solo.rb -j ${json_attribs}
 EOF
 done
