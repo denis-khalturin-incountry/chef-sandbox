@@ -5,7 +5,7 @@ test ! -f /tmp/.chef-sshkey && echo -e "y\n" | ssh-keygen -f /tmp/.chef-sshkey -
 SSH_KEY=$(cat /tmp/.chef-sshkey)
 SSH_KEY_PUB=$(cat /tmp/.chef-sshkey.pub)
 
-find data_bags -type f -name "*.json" | while read data_bag; do
+find data_bags -type f -name "chef-frontend-01.json" | while read data_bag; do
     json_attribs="nodes/$(basename ${data_bag})"
     ip=$(jq -r '.ip' ${data_bag})
 
@@ -14,7 +14,7 @@ find data_bags -type f -name "*.json" | while read data_bag; do
         -o UserKnownHostsFile=/dev/null \
         -o StrictHostKeychecking=no \
         sudo /bin/bash
-cat <<KEY | tee /root/.ssh/id_rsa
+cat <<KEY | tee /root/.ssh/id_rsa > /dev/null && echo ok || echo fail
 ${SSH_KEY}
 KEY
 cat <<KEY | tee -a /root/.ssh/authorized_keys > /dev/null
