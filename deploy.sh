@@ -5,7 +5,7 @@ test ! -f /tmp/.chef-sshkey && echo -e "y\n" | ssh-keygen -f /tmp/.chef-sshkey -
 SSH_KEY=$(cat /tmp/.chef-sshkey)
 SSH_KEY_PUB=$(cat /tmp/.chef-sshkey.pub)
 
-find data_bags -type f -name "*.json" | while read data_bag; do
+find data_bags -type f -name "*backend*1.json" | while read data_bag; do
     json_attribs="nodes/$(basename ${data_bag})"
     ip=$(jq -r '.ip' ${data_bag})
 
@@ -20,10 +20,10 @@ KEY
 cat <<KEY | sudo tee -a /root/.ssh/authorized_keys > /dev/null
 ${SSH_KEY_PUB}
 KEY
-# command -v chef-solo > /dev/null || curl https://www.chef.io/chef/install.sh -L | sudo bash
-# sudo rm -rf chef-sandbox
-# git clone https://github.com/denis-khalturin-incountry/chef-sandbox
-# cd chef-sandbox
-# sudo chef-solo --chef-license accept -c solo.rb -j ${json_attribs}
+command -v chef-solo > /dev/null || curl https://www.chef.io/chef/install.sh -L | sudo bash
+sudo rm -rf chef-sandbox
+git clone https://github.com/denis-khalturin-incountry/chef-sandbox
+cd chef-sandbox
+sudo chef-solo --chef-license accept -c solo.rb -j ${json_attribs}
 EOF
 done
