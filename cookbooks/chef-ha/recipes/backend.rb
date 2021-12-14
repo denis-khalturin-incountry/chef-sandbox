@@ -46,8 +46,10 @@ log 'message' do
 end
 
 data_bag('backend').each do |host|
+  data = data_bag_item('backend', host)
+
   log 'message' do
-    message "HOST: #{host}"
+    message "HOST: #{host}; #{data['ip']}"
     level :info
   end
 end
