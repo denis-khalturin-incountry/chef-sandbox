@@ -24,7 +24,7 @@ bash 'create-cluster' do
   only_if { data['leader'] === true }
 end
 
-data_bag('backend').each |host| do
+data_bag('backend').each do |host|
   log 'message' do
     message  "HOST: #{host}"
     level    :info
