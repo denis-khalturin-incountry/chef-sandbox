@@ -23,7 +23,6 @@ bash 'cluster-status' do
   code 'chef-backend-ctl cluster-status'
   flags 'ex'
   ignore_failure :quiet
-  action :nothing
 
   # only_if { data['leader'] != true }
 end
@@ -31,7 +30,7 @@ end
 log 'message' do
   message  "TEST"
   level    :info
-  notifies :run, 'execute[cluster-status]'
+  # notifies :run, 'bash[cluster-status]'
 end
 
 # if data['leader'] === true
