@@ -1,3 +1,6 @@
+leader = {}
+data = data_bag_item('backend', node[:hostname])
+
 directory '/etc/chef-backend' do
   action :create
 end
