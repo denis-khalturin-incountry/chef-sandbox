@@ -8,7 +8,7 @@ log 'message' do
   level    :info
 end
 
-n = data_bag_item('nodes', '127.0.0.1')
+n = data_bag_item('nodes', 'chef-backend-01')
 
 log 'message' do
   message  "databag:\nid: #{n['id']}; leader: #{n['leaders']}; qqq: #{n['qqq']}"
