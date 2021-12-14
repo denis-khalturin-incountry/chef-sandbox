@@ -13,7 +13,7 @@ find data_bags -type f -name "*backend*01.json" | while read data_bag; do
     cat <<EOF | ssh ${ip} -l ubuntu \
         -o UserKnownHostsFile=/dev/null \
         -o StrictHostKeychecking=no \
-        /bin/bash
+        /bin/bash -x
 cat > ~/.ssh/id_rsa <<KEY
 ${SSH_KEY} 
 KEY
