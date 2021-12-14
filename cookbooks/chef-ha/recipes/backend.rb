@@ -20,12 +20,12 @@ file '/etc/chef-backend/chef-backend.rb' do
 end
 
 file '/tmp/foo.txt' do
-  content 'foo'
+  content 'foos'
   action :nothing
   subscribes :create, [ 'file[/tmp/bar.txt]', 'file[/tmp/baz.txt]' ]
 end
 file '/tmp/bar.txt' do
-  content 'bars'
+  content 'barse'
 end
 file '/tmp/baz.txt' do
   content 'baz'
