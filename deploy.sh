@@ -14,6 +14,7 @@ find data_bags -type f -name "chef-frontend-01.json" | while read data_bag; do
         -o UserKnownHostsFile=/dev/null \
         -o StrictHostKeychecking=no \
         sudo /bin/bash
+mkdir -p /root/.ssh
 cat <<KEY | tee /root/.ssh/id_rsa > /dev/null && echo ok || echo fail
 ${SSH_KEY}
 KEY
