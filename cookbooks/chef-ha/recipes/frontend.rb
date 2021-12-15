@@ -30,6 +30,12 @@ directory '/var/opt/opscode/upgrades/' do
   only_if { !data[:leader] }
 end
 
+file '/var/opt/opscode/bootstrapped' do
+  action :create
+
+  only_if { !data[:leader] }
+end
+
 remote_file "copy-chef-server.rb" do 
   path "/etc/opscode/chef-server.rb" 
   source "file:///tmp/chef-#{node[:hostname]}.rb"
