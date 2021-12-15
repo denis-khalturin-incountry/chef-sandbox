@@ -68,6 +68,9 @@ data_bag('frontend').each do |host|
         scp -o StrictHostKeychecking=no /var/opt/opscode/upgrades/migration-level #{front[:ip]}:/tmp/chef-migration-level
       EOF
 
+      action :nothing
+      subscribes :run, [ 'bash[chef-server-reconfigure]' ]
+
       only_if { !front[:leader] } 
     end
   end
