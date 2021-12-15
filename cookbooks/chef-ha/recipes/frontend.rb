@@ -20,7 +20,7 @@ file "/etc/opscode/chef-server.rb`" do
   action :create
 end
 
-file "/etc/opscode/private-chef-secrets.json`" do
+file "/etc/opscode/private-chef-secrets.json" do
   content ::File.open("/tmp/chef-private-chef-secrets.json").read
   action :create
   only_if { !data[:leader] } 
