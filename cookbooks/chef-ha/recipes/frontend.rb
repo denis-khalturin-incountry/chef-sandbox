@@ -26,8 +26,17 @@ remote_file "copy-chef-server.rb" do
   only_if { !data[:leader] } 
 end
 
+bash 'status' do
+  code 'chef-server-ctl status | grep Services'
+  ignore_failure :quiet
+  returns 1
+end
+
 bash 'chef-server-reconfigure' do
   code 'chef-server-ctl reconfigure'
+
+  action :nothing
+  subscribes :run, [ 'bash[cluster-status]' ]
 end
 
 data_bag('frontend').each do |host|
