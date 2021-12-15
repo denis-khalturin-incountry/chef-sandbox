@@ -36,7 +36,7 @@ bash 'chef-server-reconfigure' do
   code 'chef-server-ctl reconfigure'
 
   action :nothing
-  subscribes :run, [ 'bash[cluster-status]' ]
+  subscribes :run, [ 'bash[status]' ]
 end
 
 data_bag('frontend').each do |host|
