@@ -53,7 +53,7 @@ bash 'status' do
 end
 
 bash 'chef-server-reconfigure' do
-  code 'chef-server-ctl reconfigure'
+  code 'chef-server-ctl reconfigure --chef-license=accept'
 
   action :nothing
   subscribes :run, [ 'bash[status]' ]
