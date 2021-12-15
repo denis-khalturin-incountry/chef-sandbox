@@ -7,9 +7,9 @@ ruby_block 'wait-chef-frontend-config' do
   end
 end
 
-file "/etc/opscode/chef-server.rb" do
-  content lazy { ::File.open("/tmp/chef-#{node[:hostname]}.rb").read }
-  action :create
+remote_file "copy-chef-server.rb" do 
+  path "/etc/opscode/chef-server.rb" 
+  source "file:///tmp/chef-#{node[:hostname]}.rb"
 end
 
 # if !data[:leader]
