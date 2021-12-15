@@ -7,23 +7,43 @@ ruby_block 'wait-chef-frontend-config' do
   end
 end
 
-remote_file "copy-chef-server.rb" do 
-  path "/etc/opscode/chef-server.rb" 
-  source "file:///tmp/chef-#{node[:hostname]}.rb"
-end
-
 ruby_block 'private-chef-secrets' do
   block do
     true until ::File.exists?("/tmp/chef-private-chef-secrets.json")
   end
 
-  only_if { !data[:leader] } 
+  only_if { !data[:leader] }
+end
+
+ruby_block 'migration-level' do
+  block do
+    true until ::File.exists?("/tmp/chef-migration-level")
+  end
+
+  only_if { !data[:leader] }
+end
+
+remote_file "copy-chef-server.rb" do 
+  path "/etc/opscode/chef-server.rb" 
+  source "file:///tmp/chef-#{node[:hostname]}.rb"
 end
 
 remote_file "copy-chef-server.rb" do 
   path "/etc/opscode/private-chef-secrets.json" 
   source "file:///tmp/chef-private-chef-secrets.json"
-  only_if { !data[:leader] } 
+  only_if { !data[:leader] }
+end
+
+remote_file "copy-migration-level" do 
+  path "/var/opt/opscode/upgrades/migration-level" 
+  source "file:///tmp/chef-migration-level"
+  only_if { !data[:leader] }
+end
+
+directory '/var/opt/opscode/upgrades/' do
+  action :create
+
+  only_if { !data[:leader] }
 end
 
 bash 'status' do
@@ -45,7 +65,7 @@ data_bag('frontend').each do |host|
   if !!data[:leader]
     bash 'private-chef-secrets' do
       code <<-EOF
-        scp -o StrictHostKeychecking=no /etc/opscode/private-chef-secrets.json #{front[:ip]}:/tmp/chef-private-chef-secrets.json
+        scp -o StrictHostKeychecking=no /var/opt/opscode/upgrades/migration-level #{front[:ip]}:/tmp/chef-migration-level
       EOF
 
       only_if { !front[:leader] } 
