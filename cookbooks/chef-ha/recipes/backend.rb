@@ -28,6 +28,14 @@ data_bag('backend').each do |host|
   back = data_bag_item('backend', host)
 
   if !!data[:leader]
+    ruby_block 'wait-chef-backend-secrets' do
+      block do
+        true until ::File.exists?('/etc/chef-backend/chef-backend-secrets.json')
+      end
+
+      only_if { !data[:leader] }
+    end
+
     bash 'chef-backend-secrets' do
       code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{back[:ip]}:/tmp/"
 
