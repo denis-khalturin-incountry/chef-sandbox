@@ -24,6 +24,7 @@ ruby_block 'migration-level' do
 end
 
 directory '/var/opt/opscode/upgrades/' do
+  recursive true
   action :create
 
   only_if { !data[:leader] }
