@@ -8,23 +8,23 @@ ruby_block 'wait-chef-frontend-config' do
 end
 
 file "/etc/opscode/chef-server.rb" do
-  content ::File.open("/tmp/chef-#{node[:hostname]}.rb").read
+  content lazy { ::File.open("/tmp/chef-#{node[:hostname]}.rb").read }
   action :create
 end
 
-if !data[:leader]
-  ruby_block 'private-chef-secrets' do
-    block do
-      true until ::File.exists?("/tmp/chef-private-chef-secrets.json")
-    end
-  end
+# if !data[:leader]
+#   ruby_block 'private-chef-secrets' do
+#     block do
+#       true until ::File.exists?("/tmp/chef-private-chef-secrets.json")
+#     end
+#   end
 
-  file "/etc/opscode/private-chef-secrets.json" do
-    content ::File.open("/tmp/chef-private-chef-secrets.json").read
-    action :create
-    only_if { !data[:leader] } 
-  end
-end
+#   file "/etc/opscode/private-chef-secrets.json" do
+#     content ::File.open("/tmp/chef-private-chef-secrets.json").read
+#     action :create
+#     only_if { !data[:leader] } 
+#   end
+# end
 
 bash 'chef-server-reconfigure' do
   code 'chef-server-ctl reconfigure'
