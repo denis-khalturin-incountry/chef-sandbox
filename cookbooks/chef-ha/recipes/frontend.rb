@@ -63,14 +63,11 @@ data_bag('frontend').each do |host|
   front = data_bag_item('frontend', host)
 
   if !!data[:leader]
-    bash 'private-chef-secrets' do
+    bash 'copy-files-to-follower' do
       code <<-EOF
         scp -o StrictHostKeychecking=no /var/opt/opscode/upgrades/migration-level #{front[:ip]}:/tmp/chef-migration-level
         scp -o StrictHostKeychecking=no /etc/opscode/private-chef-secrets.json #{front[:ip]}:/tmp/chef-private-chef-secrets.json
       EOF
-
-      action :nothing
-      subscribes :run, [ 'bash[chef-server-reconfigure]' ]
 
       only_if { !front[:leader] } 
     end
