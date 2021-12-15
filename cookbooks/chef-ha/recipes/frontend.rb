@@ -12,19 +12,19 @@ remote_file "copy-chef-server.rb" do
   source "file:///tmp/chef-#{node[:hostname]}.rb"
 end
 
-# if !data[:leader]
-#   ruby_block 'private-chef-secrets' do
-#     block do
-#       true until ::File.exists?("/tmp/chef-private-chef-secrets.json")
-#     end
-#   end
+ruby_block 'private-chef-secrets' do
+  block do
+    true until ::File.exists?("/tmp/chef-private-chef-secrets.json")
+  end
 
-#   file "/etc/opscode/private-chef-secrets.json" do
-#     content ::File.open("/tmp/chef-private-chef-secrets.json").read
-#     action :create
-#     only_if { !data[:leader] } 
-#   end
-# end
+  only_if { !data[:leader] } 
+end
+
+remote_file "copy-chef-server.rb" do 
+  path "/etc/opscode/private-chef-secrets.json" 
+  source "file:///tmp/chef-private-chef-secrets.json"
+  only_if { !data[:leader] } 
+end
 
 bash 'chef-server-reconfigure' do
   code 'chef-server-ctl reconfigure'
