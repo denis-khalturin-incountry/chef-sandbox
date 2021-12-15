@@ -23,6 +23,12 @@ ruby_block 'migration-level' do
   only_if { !data[:leader] }
 end
 
+directory '/var/opt/opscode/upgrades/' do
+  action :create
+
+  only_if { !data[:leader] }
+end
+
 remote_file "copy-chef-server.rb" do 
   path "/etc/opscode/chef-server.rb" 
   source "file:///tmp/chef-#{node[:hostname]}.rb"
@@ -37,12 +43,6 @@ end
 remote_file "copy-migration-level" do 
   path "/var/opt/opscode/upgrades/migration-level" 
   source "file:///tmp/chef-migration-level"
-  only_if { !data[:leader] }
-end
-
-directory '/var/opt/opscode/upgrades/' do
-  action :create
-
   only_if { !data[:leader] }
 end
 
