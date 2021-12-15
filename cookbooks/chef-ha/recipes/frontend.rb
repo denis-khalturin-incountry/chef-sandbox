@@ -15,7 +15,7 @@ ruby_block 'private-chef-secrets' do
   only_if { !data[:leader] } 
 end
 
-file "/etc/opscode/chef-server.rb`" do
+file "/etc/opscode/chef-server.rb" do
   content ::File.open("/tmp/chef-#{node[:hostname]}.rb").read
   action :create
 end
