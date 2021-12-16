@@ -1,4 +1,5 @@
+cookbooks/ssh/attributes/default.rb
+nodes
 chef_guid
 chef-client-running.pid
 chef-stacktrace.out
-
