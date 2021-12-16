@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ip=10.42.106.178
+ip=10.42.106.11
 
 cat <<EOF | ssh ${ip} -l ubuntu \
     -o UserKnownHostsFile=/dev/null \
@@ -10,5 +10,5 @@ command -v chef-solo > /dev/null || curl https://www.chef.io/chef/install.sh -L 
 rm -rf chef-sandbox
 git clone https://github.com/denis-khalturin-incountry/chef-sandbox
 cd chef-sandbox
-chef-solo --chef-license accept -c solo.rb -o 'recipe[chef-ha::backend]'
+chef-solo --chef-license accept -c solo.rb -o 'recipe[chef-ha::frontend]'
 EOF
