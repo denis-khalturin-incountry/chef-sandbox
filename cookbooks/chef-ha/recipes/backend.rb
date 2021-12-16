@@ -58,7 +58,7 @@ node['backend'].each do |hostname, data|
   end
 end
 
-node['backend'].each do |hostname, data|
+node['frontend'].each do |hostname, data|
   if !!host[:leader]
     bash 'chef-frontend-config' do
       code <<-EOF
