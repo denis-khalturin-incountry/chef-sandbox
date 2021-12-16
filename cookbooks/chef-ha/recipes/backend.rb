@@ -10,7 +10,7 @@ end
 dpkg_package "/tmp/#{deb}"
 
 leader = {}
-host = default['backend'][node[:hostname]]
+host = node['backend'][node[:hostname]]
 
 directory '/etc/chef-backend' do
   action :create
