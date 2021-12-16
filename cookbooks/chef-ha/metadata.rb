@@ -1,3 +1,3 @@
 name 'chef-ha'
-description 'cookbook chef infra ha'
+description 'Deploying a Chef Infra HA'
 version '1.0'

@@ -1,6 +1,0 @@
-default['ssh']['pub'] = <<-KEY
-sshkey.ssh_public_key
-KEY
-default['ssh']['key'] = <<-KEY
-sshkey.private_key
-KEY
