@@ -1,3 +1,8 @@
+# log Chef::JSONCompat.to_json_pretty(node)
+
+log "#{node['package']['backend']['deb']}, #{node['package']['backend']['sum']}"
+log "#{node['package']['frontend']['deb']}, #{node['package']['frontend']['sum']}"
+
 leader = {}
 data = data_bag_item('frontend', node[:hostname])
 

@@ -1,10 +1,5 @@
-deb = File.basename(node['package']['deb'])
+# log Chef::JSONCompat.to_json_pretty(node)
 
-remote_file "/tmp/#{deb}" do
-  source node['package']['deb']
-  checksum node['package']['sum']
-  show_progress true
-  action :create
+node['backend'].each do |host, data|
+  log "#{host}; #{data}"
 end
-
-dpkg_package "/tmp/#{deb}"

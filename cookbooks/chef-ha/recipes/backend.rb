@@ -1,5 +1,16 @@
+deb = File.basename(node['package']['backend']['deb'])
+
+remote_file "/tmp/#{deb}" do
+  source node['package']['backend']['deb']
+  checksum node['package']['backend']['sum']
+  show_progress true
+  action :create
+end
+
+dpkg_package "/tmp/#{deb}"
+
 leader = {}
-data = data_bag_item('backend', node[:hostname])
+host = default['backend'][node[:hostname]]
 
 directory '/etc/chef-backend' do
   action :create
@@ -21,42 +32,38 @@ bash 'cluster-create' do
   action :nothing
   subscribes :run, [ 'bash[cluster-status]' ]
 
-  only_if { !!data[:leader] }
+  only_if { !!host[:leader] }
 end
 
-data_bag('backend').each do |host|
-  back = data_bag_item('backend', host)
-
-  if !!data[:leader]
+node['backend'].each do |hostname, data|
+  if !!host[:leader]
     ruby_block 'wait-chef-backend-secrets' do
       block do
         true until ::File.exists?('/etc/chef-backend/chef-backend-secrets.json')
       end
 
-      only_if { !data[:leader] }
+      only_if { !host[:leader] }
     end
 
     bash 'chef-backend-secrets' do
-      code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{back[:ip]}:/tmp/"
+      code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{data[:ip]}:/tmp/"
 
-      only_if { !back[:leader] } 
+      only_if { !data[:leader] } 
     end
   else
-    if !!back[:leader]
-      leader = back
+    if !!data[:leader]
+      leader = data
       break
     end
   end
 end
 
-data_bag('frontend').each do |host|
-  front = data_bag_item('frontend', host)
-
-  if !!data[:leader]
+node['backend'].each do |hostname, data|
+  if !!host[:leader]
     bash 'chef-frontend-config' do
       code <<-EOF
-        chef-backend-ctl gen-server-config #{host} -f /tmp/chef-#{host}.rb
-        scp -o StrictHostKeychecking=no /tmp/chef-#{host}.rb #{front[:ip]}:/tmp/
+        chef-backend-ctl gen-server-config #{hostname} -f /tmp/chef-#{hostname}.rb
+        scp -o StrictHostKeychecking=no /tmp/chef-#{hostname}.rb #{data[:ip]}:/tmp/
       EOF
     end
   end
@@ -67,7 +74,7 @@ ruby_block 'wait-chef-backend-secrets' do
     true until ::File.exists?('/tmp/chef-backend-secrets.json')
   end
 
-  only_if { !data[:leader] }
+  only_if { !host[:leader] }
 end
 
 bash 'join-cluster' do
@@ -76,5 +83,5 @@ bash 'join-cluster' do
   action :nothing
   subscribes :run, [ 'bash[cluster-status]' ]
 
-  only_if { !data[:leader] }
+  only_if { !host[:leader] }
 end
