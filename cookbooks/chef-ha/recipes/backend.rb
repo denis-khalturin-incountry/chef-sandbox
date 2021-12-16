@@ -66,7 +66,7 @@ node['backend'].each do |hostname, data|
   end
 end
 
-node['backend'].each do |hostname, data|
+node['frontend'].each do |hostname, data|
   if !!host[:leader]
     bash 'chef-frontend-config' do
       code "chef-backend-ctl gen-server-config #{hostname} -f /tmp/chef-#{hostname}.rb"
