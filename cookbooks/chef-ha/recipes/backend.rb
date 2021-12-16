@@ -48,16 +48,8 @@ node['backend'].each do |hostname, data|
     end
 
     if !data[:leader]
-      Net::SCP.start(data[:ip], "root") do |scp|
-        scp.upload! "/etc/chef-backend/chef-backend-secrets.json", "/tmp/"
-      end
+      Net::SCP.upload!(data[:ip], "root", "/etc/chef-backend/chef-backend-secrets.json", "/tmp/")
     end
-
-    # bash 'chef-backend-secrets' do
-    #   code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{data[:ip]}:/tmp/"
-
-    #   only_if { !data[:leader] } 
-    # end
   else
     if !!data[:leader]
       leader = data
@@ -72,9 +64,7 @@ node['frontend'].each do |hostname, data|
       code "chef-backend-ctl gen-server-config #{hostname} -f /tmp/chef-#{hostname}.rb"
     end
 
-    Net::SCP.start(data[:ip], "root") do |scp|
-      scp.upload! "/tmp/chef-#{hostname}.rb", "/tmp/"
-    end
+    Net::SCP.upload!(data[:ip], "root", "/tmp/chef-#{hostname}.rb", "/tmp/")
   end
 end
 
