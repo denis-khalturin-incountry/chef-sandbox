@@ -1,3 +1,5 @@
+require 'net/scp'
+
 deb = File.basename(node['package']['backend']['deb'])
 
 remote_file "/tmp/#{deb}" do
@@ -45,11 +47,17 @@ node['backend'].each do |hostname, data|
       only_if { !host[:leader] }
     end
 
-    bash 'chef-backend-secrets' do
-      code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{data[:ip]}:/tmp/"
+    Net::SCP.start(data[:ip]) do |scp|
+      scp.upload! "/etc/chef-backend/chef-backend-secrets.json", "/tmp/"
 
       only_if { !data[:leader] } 
     end
+
+    # bash 'chef-backend-secrets' do
+    #   code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{data[:ip]}:/tmp/"
+
+    #   only_if { !data[:leader] } 
+    # end
   else
     if !!data[:leader]
       leader = data
@@ -61,10 +69,11 @@ end
 node['backend'].each do |hostname, data|
   if !!host[:leader]
     bash 'chef-frontend-config' do
-      code <<-EOF
-        chef-backend-ctl gen-server-config #{hostname} -f /tmp/chef-#{hostname}.rb
-        scp -o StrictHostKeychecking=no /tmp/chef-#{hostname}.rb #{data[:ip]}:/tmp/
-      EOF
+      code "chef-backend-ctl gen-server-config #{hostname} -f /tmp/chef-#{hostname}.rb"
+    end
+
+    Net::SCP.start(data[:ip]) do |scp|
+      scp.upload! "/tmp/chef-#{hostname}.rb", "/tmp/"
     end
   end
 end
