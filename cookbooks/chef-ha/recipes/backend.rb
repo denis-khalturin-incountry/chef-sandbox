@@ -64,7 +64,7 @@ node['frontend'].each do |hostname, data|
       code "chef-backend-ctl gen-server-config #{hostname} -f /tmp/chef-#{hostname}.rb"
     end
 
-    Net::SCP.upload!(data[:ip], "root", "/tmp/chef-#{hostname}.rb", "/tmp/")
+    lazy { Net::SCP.upload!(data[:ip], "root", "/tmp/chef-#{hostname}.rb", "/tmp/") }
   end
 end
 
