@@ -30,7 +30,7 @@ bash 'cluster-create' do
   code 'chef-backend-ctl create-cluster --accept-license --yes'
 
   action :nothing
-  subscribes :run, [ 'bash[cluster-status]' ]
+  subscribes :run, [ 'bash[cluster-status]' ], :immediately
 
   only_if { !!host[:leader] }
 end
@@ -41,7 +41,7 @@ ruby_block 'wait-chef-backend-secrets' do
   end
 
   action :nothing
-  subscribes :run, [ 'bash[cluster-create]' ]
+  subscribes :run, [ 'bash[cluster-create]' ], :immediately
 
   only_if { !!host[:leader] }
 end
@@ -84,7 +84,7 @@ bash 'join-cluster' do
   code "chef-backend-ctl join-cluster #{leader[:ip]} -s /tmp/chef-backend-secrets.json --accept-license --yes"
 
   action :nothing
-  subscribes :run, [ 'bash[cluster-status]' ]
+  subscribes :run, [ 'bash[cluster-status]' ], :immediately
 
   only_if { !host[:leader] }
 end
