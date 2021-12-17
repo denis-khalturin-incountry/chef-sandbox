@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ip=10.42.106.11
+ip=10.42.106.124
 
 cat <<EOF | ssh ${ip} -l ubuntu \
     -o UserKnownHostsFile=/dev/null \
