@@ -26,62 +26,70 @@ bash 'cluster-status' do
   returns 1
 end
 
-bash 'cluster-create' do
-  code 'chef-backend-ctl create-cluster --accept-license --yes'
-
+log 'message' do
+  message 'DDDDDDDDDDD'
   action :nothing
-  subscribes :run, [ 'bash[cluster-status]' ]
+  subscribes :write, [ 'bash[cluster-status]' ]
 
   only_if { !!host[:leader] }
 end
 
-ruby_block 'wait-chef-backend-secrets' do
-  block do
-    true until ::File.exists?('/etc/chef-backend/chef-backend-secrets.json')
-  end
+# bash 'cluster-create' do
+#   code 'chef-backend-ctl create-cluster --accept-license --yes'
 
-  only_if { !!host[:leader] }
-end
+#   action :nothing
+#   subscribes :run, [ 'bash[cluster-status]' ]
 
-node['backend'].each do |hostname, data|
-  if !!host[:leader]
-    bash 'chef-backend-secrets' do
-      code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{data[:ip]}:/tmp/"
+#   only_if { !!host[:leader] }
+# end
 
-      only_if { !data[:leader] } 
-    end
-  else
-    if !!data[:leader]
-      leader = data
-      break
-    end
-  end
-end
+# ruby_block 'wait-chef-backend-secrets' do
+#   block do
+#     true until ::File.exists?('/etc/chef-backend/chef-backend-secrets.json')
+#   end
 
-node['frontend'].each do |hostname, data|
-  if !!host[:leader]
-    bash 'chef-frontend-config' do
-      code <<-EOF
-        chef-backend-ctl gen-server-config #{hostname} -f /tmp/chef-#{hostname}.rb
-        scp -o StrictHostKeychecking=no /tmp/chef-#{hostname}.rb #{data[:ip]}:/tmp/
-      EOF
-    end
-  end
-end
+#   only_if { !!host[:leader] }
+# end
 
-ruby_block 'wait-chef-backend-secrets' do
-  block do
-    true until ::File.exists?('/tmp/chef-backend-secrets.json')
-  end
+# node['backend'].each do |hostname, data|
+#   if !!host[:leader]
+#     bash 'chef-backend-secrets' do
+#       code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{data[:ip]}:/tmp/"
 
-  only_if { !host[:leader] }
-end
+#       only_if { !data[:leader] }
+#     end
+#   else
+#     if !!data[:leader]
+#       leader = data
+#       break
+#     end
+#   end
+# end
 
-bash 'join-cluster' do
-  code "chef-backend-ctl join-cluster #{leader[:ip]} -s /tmp/chef-backend-secrets.json --accept-license --yes"
+# node['frontend'].each do |hostname, data|
+#   if !!host[:leader]
+#     bash 'chef-frontend-config' do
+#       code <<-EOF
+#         chef-backend-ctl gen-server-config #{hostname} -f /tmp/chef-#{hostname}.rb
+#         scp -o StrictHostKeychecking=no /tmp/chef-#{hostname}.rb #{data[:ip]}:/tmp/
+#       EOF
+#     end
+#   end
+# end
 
-  action :nothing
-  subscribes :run, [ 'bash[cluster-status]' ]
+# ruby_block 'wait-chef-backend-secrets' do
+#   block do
+#     true until ::File.exists?('/tmp/chef-backend-secrets.json')
+#   end
 
-  only_if { !host[:leader] }
-end
+#   only_if { !host[:leader] }
+# end
+
+# bash 'join-cluster' do
+#   code "chef-backend-ctl join-cluster #{leader[:ip]} -s /tmp/chef-backend-secrets.json --accept-license --yes"
+
+#   action :nothing
+#   subscribes :run, [ 'bash[cluster-status]' ]
+
+#   only_if { !host[:leader] }
+# end
