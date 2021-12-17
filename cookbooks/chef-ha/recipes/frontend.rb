@@ -5,13 +5,13 @@ host = node['frontend'][node[:hostname]]
 
 ruby_block 'wait-chef-frontend-config' do
   block do
-    true until ::File.exists?("/tmp/chef-#{node[:hostname]}.rb")
+    sleep 5 until ::File.exists?("/tmp/chef-#{node[:hostname]}.rb")
   end
 end
 
 ruby_block 'private-chef-secrets' do
   block do
-    true until ::File.exists?("/tmp/chef-private-chef-secrets.json")
+    sleep 5 until ::File.exists?("/tmp/chef-private-chef-secrets.json")
   end
 
   only_if { !host[:leader] }
@@ -19,7 +19,7 @@ end
 
 ruby_block 'migration-level' do
   block do
-    true until ::File.exists?("/tmp/chef-migration-level")
+    sleep 5 until ::File.exists?("/tmp/chef-migration-level")
   end
 
   only_if { !host[:leader] }

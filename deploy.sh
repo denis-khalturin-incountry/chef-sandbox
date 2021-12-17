@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 ip=10.42.106.171
 
 cat <<EOF | ssh ${ip} -l ubuntu \

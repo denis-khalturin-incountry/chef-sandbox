@@ -26,30 +26,25 @@ bash 'cluster-status' do
   returns 1
 end
 
-log 'message' do
-  message 'DDDDDDDDDDD'
+bash 'cluster-create' do
+  code 'chef-backend-ctl create-cluster --accept-license --yes'
+
   action :nothing
-  subscribes :write, [ 'bash[cluster-status]' ]
+  subscribes :run, [ 'bash[cluster-status]' ]
 
   only_if { !!host[:leader] }
 end
 
-# bash 'cluster-create' do
-#   code 'chef-backend-ctl create-cluster --accept-license --yes'
+ruby_block 'wait-chef-backend-secrets' do
+  block do
+    sleep 5 until ::File.exists?('/etc/chef-backend/chef-backend-secrets.json')
+  end
 
-#   action :nothing
-#   subscribes :run, [ 'bash[cluster-status]' ]
+  action :nothing
+  subscribes :run, [ 'bash[cluster-create]' ]
 
-#   only_if { !!host[:leader] }
-# end
-
-# ruby_block 'wait-chef-backend-secrets' do
-#   block do
-#     true until ::File.exists?('/etc/chef-backend/chef-backend-secrets.json')
-#   end
-
-#   only_if { !!host[:leader] }
-# end
+  only_if { !!host[:leader] }
+end
 
 # node['backend'].each do |hostname, data|
 #   if !!host[:leader]
@@ -79,7 +74,7 @@ end
 
 # ruby_block 'wait-chef-backend-secrets' do
 #   block do
-#     true until ::File.exists?('/tmp/chef-backend-secrets.json')
+#     sleep 5 until ::File.exists?('/tmp/chef-backend-secrets.json')
 #   end
 
 #   only_if { !host[:leader] }
