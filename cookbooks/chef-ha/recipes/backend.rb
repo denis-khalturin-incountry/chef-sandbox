@@ -46,45 +46,45 @@ ruby_block 'wait-chef-backend-secrets' do
   only_if { !!host[:leader] }
 end
 
-# node['backend'].each do |hostname, data|
-#   if !!host[:leader]
-#     bash 'chef-backend-secrets' do
-#       code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{data[:ip]}:/tmp/"
+node['backend'].each do |hostname, data|
+  if !!host[:leader]
+    bash 'chef-backend-secrets' do
+      code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{data[:ip]}:/tmp/"
 
-#       only_if { !data[:leader] }
-#     end
-#   else
-#     if !!data[:leader]
-#       leader = data
-#       break
-#     end
-#   end
-# end
+      only_if { !data[:leader] }
+    end
+  else
+    if !!data[:leader]
+      leader = data
+      break
+    end
+  end
+end
 
-# node['frontend'].each do |hostname, data|
-#   if !!host[:leader]
-#     bash 'chef-frontend-config' do
-#       code <<-EOF
-#         chef-backend-ctl gen-server-config #{hostname} -f /tmp/chef-#{hostname}.rb
-#         scp -o StrictHostKeychecking=no /tmp/chef-#{hostname}.rb #{data[:ip]}:/tmp/
-#       EOF
-#     end
-#   end
-# end
+node['frontend'].each do |hostname, data|
+  if !!host[:leader]
+    bash 'chef-frontend-config' do
+      code <<-EOF
+        chef-backend-ctl gen-server-config #{hostname} -f /tmp/chef-#{hostname}.rb
+        scp -o StrictHostKeychecking=no /tmp/chef-#{hostname}.rb #{data[:ip]}:/tmp/
+      EOF
+    end
+  end
+end
 
-# ruby_block 'wait-chef-backend-secrets' do
-#   block do
-#     sleep 5 until ::File.exists?('/tmp/chef-backend-secrets.json')
-#   end
+ruby_block 'wait-chef-backend-secrets' do
+  block do
+    sleep 5 until ::File.exists?('/tmp/chef-backend-secrets.json')
+  end
 
-#   only_if { !host[:leader] }
-# end
+  only_if { !host[:leader] }
+end
 
-# bash 'join-cluster' do
-#   code "chef-backend-ctl join-cluster #{leader[:ip]} -s /tmp/chef-backend-secrets.json --accept-license --yes"
+bash 'join-cluster' do
+  code "chef-backend-ctl join-cluster #{leader[:ip]} -s /tmp/chef-backend-secrets.json --accept-license --yes"
 
-#   action :nothing
-#   subscribes :run, [ 'bash[cluster-status]' ]
+  action :nothing
+  subscribes :run, [ 'bash[cluster-status]' ]
 
-#   only_if { !host[:leader] }
-# end
+  only_if { !host[:leader] }
+end
