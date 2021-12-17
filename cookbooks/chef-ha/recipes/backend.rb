@@ -35,16 +35,16 @@ bash 'cluster-create' do
   only_if { !!host[:leader] }
 end
 
+ruby_block 'wait-chef-backend-secrets' do
+  block do
+    true until ::File.exists?('/etc/chef-backend/chef-backend-secrets.json')
+  end
+
+  only_if { !!host[:leader] }
+end
+
 node['backend'].each do |hostname, data|
   if !!host[:leader]
-    ruby_block 'wait-chef-backend-secrets' do
-      block do
-        true until ::File.exists?('/etc/chef-backend/chef-backend-secrets.json')
-      end
-
-      only_if { !host[:leader] }
-    end
-
     bash 'chef-backend-secrets' do
       code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{data[:ip]}:/tmp/"
 
