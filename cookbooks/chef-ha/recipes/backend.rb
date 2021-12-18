@@ -84,7 +84,7 @@ bash 'join-cluster' do
   code "chef-backend-ctl join-cluster #{leader[:ip]} -s /opt/chef-backend-secrets.json --accept-license --yes"
 
   action :nothing
-  subscribes :run, [ 'bash[cluster-status]' ], :immediately
+  subscribes :run, [ 'ruby_block[wait-chef-backend-secrets]' ], :immediately
 
   only_if { !host[:leader] }
 end

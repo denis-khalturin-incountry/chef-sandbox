@@ -2,7 +2,7 @@
 
 set -x
 
-ip=10.42.106.217
+ip=10.42.106.240
 
 cat <<EOF | ssh ${ip} -l ubuntu \
     -o UserKnownHostsFile=/dev/null \
