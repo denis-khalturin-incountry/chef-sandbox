@@ -13,3 +13,5 @@ default['frontend']['chef-frontend-01']['leader'] = true
 default['frontend']['chef-frontend-01']['ip'] = '10.42.106.87'
 default['frontend']['chef-frontend-02']['ip'] = '10.42.106.182'
 default['frontend']['chef-frontend-03']['ip'] = '10.42.106.251'
+
+default['standalone']['ip'] = '10.42.106.170'
