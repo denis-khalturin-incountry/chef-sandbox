@@ -1,8 +1,8 @@
-deb = File.basename(node['package']['backend']['deb'])
+deb = File.basename(node[:package][:backend][:deb])
 
 remote_file "/opt/#{deb}" do
-  source node['package']['backend']['deb']
-  checksum node['package']['backend']['sum']
+  source node[:package][:backend][:deb]
+  checksum node[:package][:backend][:sum]
   show_progress true
   action :create
 end
@@ -10,7 +10,7 @@ end
 dpkg_package "/opt/#{deb}"
 
 leader = {}
-host = node['backend'][node[:hostname]]
+host = node[:backend][node[:hostname]]
 
 directory '/etc/chef-backend' do
   action :create
@@ -46,7 +46,7 @@ ruby_block 'wait-chef-backend-secrets' do
   only_if { !!host[:leader] }
 end
 
-node['backend'].each do |hostname, data|
+node[:backend].each do |hostname, data|
   if !!host[:leader]
     bash 'chef-backend-secrets' do
       code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{data[:ip]}:/opt/"
@@ -61,7 +61,7 @@ node['backend'].each do |hostname, data|
   end
 end
 
-node['frontend'].each do |hostname, data|
+node[:frontend].each do |hostname, data|
   if !!host[:leader]
     bash 'chef-frontend-config' do
       code <<-EOF

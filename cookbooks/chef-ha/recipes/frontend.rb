@@ -1,10 +1,10 @@
 # log Chef::JSONCompat.to_json_pretty(node)
 
-deb = File.basename(node['package']['frontend']['deb'])
+deb = File.basename(node[:package][:frontend][:deb])
 
 remote_file "/opt/#{deb}" do
-  source node['package']['frontend']['deb']
-  checksum node['package']['frontend']['sum']
+  source node[:package][:frontend][:deb]
+  checksum node[:package][:frontend][:sum]
   show_progress true
   action :create
 end
@@ -12,7 +12,7 @@ end
 dpkg_package "/opt/#{deb}"
 
 leader = {}
-host = node['frontend'][node[:hostname]]
+host = node[:frontend][node[:hostname]]
 
 ruby_block 'wait-chef-frontend-config' do
   block do
@@ -79,7 +79,7 @@ bash 'chef-server-reconfigure' do
   subscribes :run, [ 'bash[status]' ], :immediately
 end
 
-node['frontend'].each do |hostname, data|
+node[:frontend].each do |hostname, data|
   if !!host[:leader]
     bash 'copy-files-to-follower' do
       code <<-EOF
