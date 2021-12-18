@@ -5,11 +5,11 @@ default['package']['frontend']['deb'] = 'https://packages.chef.io/files/stable/c
 default['package']['frontend']['sum'] = '2acdbaee2046885103dee271009ff360001b86d304a47abbc4d52bd0215003e2'
 
 default['backend']['chef-backend-01']['leader'] = true
-default['backend']['chef-backend-01']['ip'] = '10.42.106.171'
-default['backend']['chef-backend-02']['ip'] = '10.42.106.24'
-default['backend']['chef-backend-03']['ip'] = '10.42.106.99'
+default['backend']['chef-backend-01']['ip'] = '10.42.106.17'
+default['backend']['chef-backend-02']['ip'] = '10.42.106.217'
+default['backend']['chef-backend-03']['ip'] = '10.42.106.226'
 
 default['frontend']['chef-frontend-01']['leader'] = true
-default['frontend']['chef-frontend-01']['ip'] = '10.42.106.104'
-default['frontend']['chef-frontend-02']['ip'] = '10.42.106.177'
-default['frontend']['chef-frontend-03']['ip'] = '10.42.106.22'
+default['frontend']['chef-frontend-01']['ip'] = '10.42.106.235'
+default['frontend']['chef-frontend-02']['ip'] = '10.42.106.194'
+default['frontend']['chef-frontend-03']['ip'] = '10.42.106.186'
