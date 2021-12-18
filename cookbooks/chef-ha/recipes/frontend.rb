@@ -1,5 +1,16 @@
 # log Chef::JSONCompat.to_json_pretty(node)
 
+deb = File.basename(node['package']['frontend']['deb'])
+
+remote_file "/tmp/#{deb}" do
+  source node['package']['frontend']['deb']
+  checksum node['package']['frontend']['sum']
+  show_progress true
+  action :create
+end
+
+dpkg_package "/tmp/#{deb}"
+
 leader = {}
 host = node['frontend'][node[:hostname]]
 
