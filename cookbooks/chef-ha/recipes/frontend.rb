@@ -2,27 +2,27 @@
 
 deb = File.basename(node['package']['frontend']['deb'])
 
-remote_file "/tmp/#{deb}" do
+remote_file "/opt/#{deb}" do
   source node['package']['frontend']['deb']
   checksum node['package']['frontend']['sum']
   show_progress true
   action :create
 end
 
-dpkg_package "/tmp/#{deb}"
+dpkg_package "/opt/#{deb}"
 
 leader = {}
 host = node['frontend'][node[:hostname]]
 
 ruby_block 'wait-chef-frontend-config' do
   block do
-    sleep 5 until ::File.exists?("/tmp/chef-#{node[:hostname]}.rb")
+    sleep 5 until ::File.exists?("/opt/chef-#{node[:hostname]}.rb")
   end
 end
 
 ruby_block 'private-chef-secrets' do
   block do
-    sleep 5 until ::File.exists?("/tmp/chef-private-chef-secrets.json")
+    sleep 5 until ::File.exists?("/opt/chef-private-chef-secrets.json")
   end
 
   only_if { !host[:leader] }
@@ -30,7 +30,7 @@ end
 
 ruby_block 'migration-level' do
   block do
-    sleep 5 until ::File.exists?("/tmp/chef-migration-level")
+    sleep 5 until ::File.exists?("/opt/chef-migration-level")
   end
 
   only_if { !host[:leader] }
@@ -51,18 +51,18 @@ end
 
 remote_file "copy-chef-server.rb" do 
   path "/etc/opscode/chef-server.rb" 
-  source "file:///tmp/chef-#{node[:hostname]}.rb"
+  source "file:///opt/chef-#{node[:hostname]}.rb"
 end
 
 remote_file "copy-private-chef-secrets.json" do 
   path "/etc/opscode/private-chef-secrets.json" 
-  source "file:///tmp/chef-private-chef-secrets.json"
+  source "file:///opt/chef-private-chef-secrets.json"
   only_if { !host[:leader] }
 end
 
 remote_file "copy-migration-level" do 
   path "/var/opt/opscode/upgrades/migration-level" 
-  source "file:///tmp/chef-migration-level"
+  source "file:///opt/chef-migration-level"
   only_if { !host[:leader] }
 end
 
@@ -83,8 +83,8 @@ node['frontend'].each do |hostname, data|
   if !!host[:leader]
     bash 'copy-files-to-follower' do
       code <<-EOF
-        scp -o StrictHostKeychecking=no /var/opt/opscode/upgrades/migration-level #{data[:ip]}:/tmp/chef-migration-level
-        scp -o StrictHostKeychecking=no /etc/opscode/private-chef-secrets.json #{data[:ip]}:/tmp/chef-private-chef-secrets.json
+        scp -o StrictHostKeychecking=no /var/opt/opscode/upgrades/migration-level #{data[:ip]}:/opt/chef-migration-level
+        scp -o StrictHostKeychecking=no /etc/opscode/private-chef-secrets.json #{data[:ip]}:/opt/chef-private-chef-secrets.json
       EOF
 
       only_if { !data[:leader] } 

@@ -1,13 +1,13 @@
 deb = File.basename(node['package']['backend']['deb'])
 
-remote_file "/tmp/#{deb}" do
+remote_file "/opt/#{deb}" do
   source node['package']['backend']['deb']
   checksum node['package']['backend']['sum']
   show_progress true
   action :create
 end
 
-dpkg_package "/tmp/#{deb}"
+dpkg_package "/opt/#{deb}"
 
 leader = {}
 host = node['backend'][node[:hostname]]
@@ -49,7 +49,7 @@ end
 node['backend'].each do |hostname, data|
   if !!host[:leader]
     bash 'chef-backend-secrets' do
-      code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{data[:ip]}:/tmp/"
+      code "scp -o StrictHostKeychecking=no /etc/chef-backend/chef-backend-secrets.json #{data[:ip]}:/opt/"
 
       only_if { !data[:leader] }
     end
@@ -65,8 +65,8 @@ node['frontend'].each do |hostname, data|
   if !!host[:leader]
     bash 'chef-frontend-config' do
       code <<-EOF
-        chef-backend-ctl gen-server-config #{hostname} -f /tmp/chef-#{hostname}.rb
-        scp -o StrictHostKeychecking=no /tmp/chef-#{hostname}.rb #{data[:ip]}:/tmp/
+        chef-backend-ctl gen-server-config #{hostname} -f /opt/chef-#{hostname}.rb
+        scp -o StrictHostKeychecking=no /opt/chef-#{hostname}.rb #{data[:ip]}:/opt/
       EOF
     end
   end
@@ -74,14 +74,14 @@ end
 
 ruby_block 'wait-chef-backend-secrets' do
   block do
-    sleep 5 until ::File.exists?('/tmp/chef-backend-secrets.json')
+    sleep 5 until ::File.exists?('/opt/chef-backend-secrets.json')
   end
 
   only_if { !host[:leader] }
 end
 
 bash 'join-cluster' do
-  code "chef-backend-ctl join-cluster #{leader[:ip]} -s /tmp/chef-backend-secrets.json --accept-license --yes"
+  code "chef-backend-ctl join-cluster #{leader[:ip]} -s /opt/chef-backend-secrets.json --accept-license --yes"
 
   action :nothing
   subscribes :run, [ 'bash[cluster-status]' ], :immediately
