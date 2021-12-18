@@ -43,7 +43,7 @@ remote_file "copy-chef-server.rb" do
   source "file:///tmp/chef-#{node[:hostname]}.rb"
 end
 
-remote_file "copy-chef-server.rb" do 
+remote_file "copy-private-chef-secrets.json" do 
   path "/etc/opscode/private-chef-secrets.json" 
   source "file:///tmp/chef-private-chef-secrets.json"
   only_if { !host[:leader] }
