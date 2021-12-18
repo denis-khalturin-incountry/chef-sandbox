@@ -65,7 +65,7 @@ bash 'chef-server-reconfigure' do
   code 'chef-server-ctl reconfigure --chef-license=accept'
 
   action :nothing
-  subscribes :run, [ 'bash[status]' ]
+  subscribes :run, [ 'bash[status]' ], :immediately
 end
 
 node['frontend'].each do |hostname, data|
